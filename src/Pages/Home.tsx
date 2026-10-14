@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { ShoppingBag, Star, ArrowRight } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import type { RootState, AppDispatch } from "../Redux/store";
-import { addToCart, type CartItem } from "../Redux/slice";
+import { addToCart, type CartItem } from "../Redux/Slices/slice";
 import Navbar from "../Components/Navbar";
 
 export interface ProductData {

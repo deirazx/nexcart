@@ -16,7 +16,7 @@ import {
     incrementQuantity,
     decrementQuantity,
     clearCart,
-} from "../Redux/slice";
+} from "../Redux/Slices/slice";
 
 const Cart: React.FC = () => {
     const dispatch = useDispatch<AppDispatch>();
