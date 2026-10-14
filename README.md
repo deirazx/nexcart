@@ -1,32 +1,29 @@
-# React + TypeScript + Vite
+# NexCart - Modern E-Commerce Web App
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+A modern, responsive e-commerce application built with React 19, TypeScript, Vite, and Tailwind CSS.
 
-Currently, two official plugins are available:
+## 🚀 Features
+- **Product Catalog**: Live integration with DummyJSON API showcasing products with categories, ratings, and discounts.
+- **Search & Filters**: Real-time product search, category filtering, and sorting (price, rating).
+- **Interactive Shopping**: Slide-over cart drawer with free shipping progress bar, quantity controls, and order summary.
+- **Authentication**: Responsive login and registration pages with credential validation and mock user support.
+- **Theme & Design**: Sleek dark slate aesthetic with Plus Jakarta Sans typography, frosted glassmorphism, and micro-animations.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## 🛠️ Tech Stack
+- **Framework**: React 19 + TypeScript + Vite
+- **Styling**: Tailwind CSS v4
+- **Icons**: Lucide React
+- **Routing**: React Router DOM v7
 
-## React Compiler
+## 📦 Getting Started
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+```bash
+# Install dependencies
+npm install
 
-## Expanding the Oxlint configuration
+# Start development server
+npm run dev
 
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
-
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
+# Build for production
+npm run build
 ```
-
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
