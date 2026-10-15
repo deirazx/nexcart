@@ -12,6 +12,7 @@ import {
     CheckCircle2,
     ShoppingBag,
     Tag,
+    AlertCircle,
 } from "lucide-react";
 import type { RootState, AppDispatch } from "../Redux/store";
 import { clearCart } from "../Redux/Slices/slice";
@@ -29,10 +30,10 @@ interface CheckoutFormData {
     country: string;
     shippingMethod: "standard" | "express";
     paymentMethod: "card" | "upi" | "cod";
-    cardName: string;
-    cardNumber: string;
-    cardExpiry: string;
-    cardCvv: string;
+    cardName?: string;
+    cardNumber?: string;
+    cardExpiry?: string;
+    cardCvv?: string;
 }
 
 const Checkout: React.FC = () => {
@@ -52,13 +53,14 @@ const Checkout: React.FC = () => {
         zipCode: "",
         country: "India",
         shippingMethod: "standard",
-        paymentMethod: "card",
+        paymentMethod: "cod",
         cardName: "",
         cardNumber: "",
         cardExpiry: "",
         cardCvv: "",
     });
 
+    const [paymentWarning, setPaymentWarning] = useState<string | null>(null);
     const [promoCode, setPromoCode] = useState<string>("");
     const [discount, setDiscount] = useState<number>(0);
     const [promoApplied, setPromoApplied] = useState<boolean>(false);
@@ -348,11 +350,10 @@ const Checkout: React.FC = () => {
 
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                     <label
-                                        className={`p-4 rounded-xl border flex flex-col justify-between cursor-pointer transition ${
-                                            form.shippingMethod === "standard"
-                                                ? "border-indigo-500 bg-indigo-500/10"
-                                                : "border-slate-800 bg-slate-950/40 hover:border-slate-700"
-                                        }`}
+                                        className={`p-4 rounded-xl border flex flex-col justify-between cursor-pointer transition ${form.shippingMethod === "standard"
+                                            ? "border-indigo-500 bg-indigo-500/10"
+                                            : "border-slate-800 bg-slate-950/40 hover:border-slate-700"
+                                            }`}
                                     >
                                         <div className="flex items-center justify-between">
                                             <span className="text-sm font-bold text-white">Standard Delivery</span>
@@ -374,11 +375,10 @@ const Checkout: React.FC = () => {
                                     </label>
 
                                     <label
-                                        className={`p-4 rounded-xl border flex flex-col justify-between cursor-pointer transition ${
-                                            form.shippingMethod === "express"
-                                                ? "border-indigo-500 bg-indigo-500/10"
-                                                : "border-slate-800 bg-slate-950/40 hover:border-slate-700"
-                                        }`}
+                                        className={`p-4 rounded-xl border flex flex-col justify-between cursor-pointer transition ${form.shippingMethod === "express"
+                                            ? "border-indigo-500 bg-indigo-500/10"
+                                            : "border-slate-800 bg-slate-950/40 hover:border-slate-700"
+                                            }`}
                                     >
                                         <div className="flex items-center justify-between">
                                             <span className="text-sm font-bold text-white">Express Courier</span>
@@ -414,123 +414,86 @@ const Checkout: React.FC = () => {
                                     </div>
                                 </div>
 
-                                {/* Payment Method Tabs */}
-                                <div className="grid grid-cols-3 gap-2">
-                                    {[
-                                        { id: "card", label: "Credit / Debit" },
-                                        { id: "upi", label: "UPI / NetBanking" },
-                                        { id: "cod", label: "Cash on Delivery" },
-                                    ].map((m) => (
+                                {/* Payment Method Options */}
+                                <div className="space-y-3">
+                                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+                                        {/* Cash on Delivery (Active) */}
                                         <button
-                                            key={m.id}
                                             type="button"
-                                            onClick={() => setForm({ ...form, paymentMethod: m.id as any })}
-                                            className={`py-2 px-3 rounded-xl text-xs font-semibold border transition cursor-pointer ${
-                                                form.paymentMethod === m.id
-                                                    ? "bg-indigo-600 border-indigo-500 text-white shadow-md shadow-indigo-600/30"
-                                                    : "bg-slate-950/60 border-slate-800 text-slate-400 hover:text-white"
-                                            }`}
+                                            onClick={() => {
+                                                setForm({ ...form, paymentMethod: "cod" });
+                                                setPaymentWarning(null);
+                                            }}
+                                            className="py-3 px-3.5 rounded-xl text-xs font-semibold border transition cursor-pointer text-left bg-indigo-600/15 border-indigo-500 text-white shadow-md shadow-indigo-600/20 relative"
                                         >
-                                            {m.label}
+                                            <div className="flex items-center justify-between">
+                                                <span className="font-bold">Cash on Delivery</span>
+                                                <span className="text-[10px] bg-emerald-500/20 text-emerald-400 font-bold px-1.5 py-0.5 rounded border border-emerald-500/30">
+                                                    Available
+                                                </span>
+                                            </div>
+                                            <span className="text-[11px] text-slate-300 mt-1 block">Pay at doorstep</span>
                                         </button>
-                                    ))}
+
+                                        {/* Credit / Debit Card (Disabled with notice) */}
+                                        <button
+                                            type="button"
+                                            onClick={() => setPaymentWarning("We are working on Credit/Debit Card payments! This is currently under development. Please continue with Cash on Delivery (COD).")}
+                                            className="py-3 px-3.5 rounded-xl text-xs font-semibold border transition cursor-pointer text-left bg-slate-950/60 border-slate-800 text-slate-400 hover:border-slate-700 hover:text-slate-300"
+                                        >
+                                            <div className="flex items-center justify-between">
+                                                <span>Credit / Debit Card</span>
+                                                <span className="text-[9px] bg-slate-800 text-slate-400 px-1.5 py-0.5 rounded">
+                                                    In Progress
+                                                </span>
+                                            </div>
+                                            <span className="text-[11px] text-slate-500 mt-1 block">Under Development</span>
+                                        </button>
+
+                                        {/* UPI / NetBanking (Disabled with notice) */}
+                                        <button
+                                            type="button"
+                                            onClick={() => setPaymentWarning("We are working on UPI & NetBanking! This is currently under development. Please continue with Cash on Delivery (COD).")}
+                                            className="py-3 px-3.5 rounded-xl text-xs font-semibold border transition cursor-pointer text-left bg-slate-950/60 border-slate-800 text-slate-400 hover:border-slate-700 hover:text-slate-300"
+                                        >
+                                            <div className="flex items-center justify-between">
+                                                <span>UPI / NetBanking</span>
+                                                <span className="text-[9px] bg-slate-800 text-slate-400 px-1.5 py-0.5 rounded">
+                                                    In Progress
+                                                </span>
+                                            </div>
+                                            <span className="text-[11px] text-slate-500 mt-1 block">Under Development</span>
+                                        </button>
+                                    </div>
+
+                                    {/* Development Notice Alert Banner */}
+                                    {paymentWarning && (
+                                        <div className="p-3.5 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-300 text-xs flex items-start gap-2.5 animate-in fade-in duration-200">
+                                            <AlertCircle className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
+                                            <div className="flex-1">
+                                                <p className="font-semibold leading-relaxed">{paymentWarning}</p>
+                                            </div>
+                                            <button
+                                                type="button"
+                                                onClick={() => setPaymentWarning(null)}
+                                                className="text-amber-400 hover:text-amber-200 text-xs font-bold cursor-pointer"
+                                            >
+                                                ✕
+                                            </button>
+                                        </div>
+                                    )}
+
+                                    {/* Cash on Delivery Details Box */}
+                                    <div className="p-4 rounded-xl bg-slate-950/70 border border-slate-800/80 space-y-2">
+                                        <div className="flex items-center gap-2 text-emerald-400 font-bold text-xs">
+                                            <CheckCircle2 className="w-4 h-4" />
+                                            <span>Cash on Delivery (COD) Selected</span>
+                                        </div>
+                                        <p className="text-xs text-slate-300 leading-relaxed">
+                                            No online payment needed right now! You can conveniently pay in cash or via UPI QR code directly to the courier when your order is delivered to your address.
+                                        </p>
+                                    </div>
                                 </div>
-
-                                {form.paymentMethod === "card" && (
-                                    <div className="space-y-4 pt-2">
-                                        <div className="space-y-1.5">
-                                            <label className="block text-xs font-semibold text-slate-300">
-                                                Cardholder Name *
-                                            </label>
-                                            <div className="rounded-xl bg-slate-950/60 border border-slate-800 focus-within:border-indigo-500 focus-within:ring-2 focus-within:ring-indigo-500/20 transition">
-                                                <input
-                                                    type="text"
-                                                    name="cardName"
-                                                    required
-                                                    value={form.cardName}
-                                                    onChange={handleInputChange}
-                                                    placeholder="John Doe"
-                                                    className="w-full px-3.5 py-2.5 bg-transparent text-slate-100 placeholder-slate-500 text-sm focus:outline-none rounded-xl"
-                                                />
-                                            </div>
-                                        </div>
-
-                                        <div className="space-y-1.5">
-                                            <label className="block text-xs font-semibold text-slate-300">
-                                                Card Number *
-                                            </label>
-                                            <div className="rounded-xl bg-slate-950/60 border border-slate-800 focus-within:border-indigo-500 focus-within:ring-2 focus-within:ring-indigo-500/20 transition flex items-center pr-3">
-                                                <input
-                                                    type="text"
-                                                    name="cardNumber"
-                                                    required
-                                                    value={form.cardNumber}
-                                                    onChange={handleInputChange}
-                                                    placeholder="4532 •••• •••• 8921"
-                                                    maxLength={19}
-                                                    className="w-full px-3.5 py-2.5 bg-transparent text-slate-100 placeholder-slate-500 text-sm focus:outline-none rounded-xl"
-                                                />
-                                                <CreditCard className="w-4 h-4 text-slate-500 shrink-0" />
-                                            </div>
-                                        </div>
-
-                                        <div className="grid grid-cols-2 gap-4">
-                                            <div className="space-y-1.5">
-                                                <label className="block text-xs font-semibold text-slate-300">
-                                                    Expiration (MM/YY) *
-                                                </label>
-                                                <div className="rounded-xl bg-slate-950/60 border border-slate-800 focus-within:border-indigo-500 focus-within:ring-2 focus-within:ring-indigo-500/20 transition">
-                                                    <input
-                                                        type="text"
-                                                        name="cardExpiry"
-                                                        required
-                                                        value={form.cardExpiry}
-                                                        onChange={handleInputChange}
-                                                        placeholder="12/28"
-                                                        maxLength={5}
-                                                        className="w-full px-3.5 py-2.5 bg-transparent text-slate-100 placeholder-slate-500 text-sm focus:outline-none rounded-xl"
-                                                    />
-                                                </div>
-                                            </div>
-
-                                            <div className="space-y-1.5">
-                                                <label className="block text-xs font-semibold text-slate-300">
-                                                    Security Code (CVV) *
-                                                </label>
-                                                <div className="rounded-xl bg-slate-950/60 border border-slate-800 focus-within:border-indigo-500 focus-within:ring-2 focus-within:ring-indigo-500/20 transition flex items-center pr-3">
-                                                    <input
-                                                        type="password"
-                                                        name="cardCvv"
-                                                        required
-                                                        value={form.cardCvv}
-                                                        onChange={handleInputChange}
-                                                        placeholder="•••"
-                                                        maxLength={4}
-                                                        className="w-full px-3.5 py-2.5 bg-transparent text-slate-100 placeholder-slate-500 text-sm focus:outline-none rounded-xl"
-                                                    />
-                                                    <Lock className="w-3.5 h-3.5 text-slate-500 shrink-0" />
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                )}
-
-                                {form.paymentMethod === "upi" && (
-                                    <div className="p-4 rounded-xl bg-slate-950/60 border border-slate-800 text-xs text-slate-300 space-y-2">
-                                        <p>You can complete your payment via Google Pay, PhonePe, Paytm or any UPI ID.</p>
-                                        <input
-                                            type="text"
-                                            placeholder="Enter your UPI ID (e.g. mobile@upi)"
-                                            className="w-full px-3.5 py-2.5 bg-slate-900 border border-slate-800 rounded-xl text-white text-xs focus:outline-none focus:border-indigo-500"
-                                        />
-                                    </div>
-                                )}
-
-                                {form.paymentMethod === "cod" && (
-                                    <div className="p-4 rounded-xl bg-slate-950/60 border border-slate-800 text-xs text-slate-300">
-                                        <p>Pay with cash or digital UPI upon receiving your delivery at your doorstep.</p>
-                                    </div>
-                                )}
                             </div>
 
                             {/* Submit Button */}
