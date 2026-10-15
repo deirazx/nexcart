@@ -217,14 +217,13 @@ const Cart: React.FC = () => {
                                     </div>
                                 </div>
 
-                                <button
-                                    type="button"
-                                    onClick={() => alert("Proceeding to checkout!")}
+                                <Link
+                                    to="/checkout"
                                     className="w-full py-3.5 px-4 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-bold text-sm shadow-lg shadow-indigo-600/30 transition flex items-center justify-center gap-2 cursor-pointer active:scale-98"
                                 >
                                     <span>Proceed to Checkout</span>
                                     <ArrowRight className="w-4 h-4" />
-                                </button>
+                                </Link>
 
                                 <div className="pt-2 border-t border-slate-800/80 flex items-center justify-center gap-2 text-[11px] text-slate-500">
                                     <ShieldCheck className="w-4 h-4 text-emerald-400" />

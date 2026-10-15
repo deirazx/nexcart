@@ -5,6 +5,7 @@ import Home from "./Pages/Home"
 import Register from "./Pages/Register"
 import Cart from "./Pages/Cart"
 import { useEffect, useState } from "react"
+import Checkout from "./Pages/Checkout"
 
 const App = () => {
   const [isLoggedIn, setIsloggedIn] = useState<boolean>(false);
@@ -24,6 +25,7 @@ const App = () => {
         <Route path="/cart" element={<Cart />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/checkout" element={<Checkout />} />
       </Routes>
     </>
   )
